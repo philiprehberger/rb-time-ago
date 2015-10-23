@@ -49,9 +49,7 @@ module Philiprehberger
       absolute_diff = diff.abs
       past = diff.positive?
 
-      if max_days && absolute_diff >= max_days * SECONDS_PER_DAY
-        return time.strftime('%b %-d, %Y')
-      end
+      return time.strftime('%b %-d, %Y') if max_days && absolute_diff >= max_days * SECONDS_PER_DAY
 
       case style
       when :long  then format_long(absolute_diff, past)
