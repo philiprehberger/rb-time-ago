@@ -2,8 +2,7 @@
 
 [![Tests](https://github.com/philiprehberger/rb-time-ago/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-time-ago/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-time_ago.svg)](https://rubygems.org/gems/philiprehberger-time_ago)
-[![License](https://img.shields.io/github/license/philiprehberger/rb-time-ago)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
+[![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-time-ago)](https://github.com/philiprehberger/rb-time-ago/commits/main)
 
 Relative time formatting for past and future timestamps
 
@@ -86,6 +85,24 @@ bundle install
 bundle exec rspec
 bundle exec rubocop
 ```
+
+## Support
+
+If you find this project useful:
+
+⭐ [Star the repo](https://github.com/philiprehberger/rb-time-ago)
+
+🐛 [Report issues](https://github.com/philiprehberger/rb-time-ago/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
+💡 [Suggest features](https://github.com/philiprehberger/rb-time-ago/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+
+❤️ [Sponsor development](https://github.com/sponsors/philiprehberger)
+
+🌐 [All Open Source Projects](https://philiprehberger.com/open-source-packages)
+
+💻 [GitHub Profile](https://github.com/philiprehberger)
+
+🔗 [LinkedIn Profile](https://www.linkedin.com/in/philiprehberger)
 
 ## License
 
