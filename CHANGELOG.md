@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-01
+
+### Added
+- `precision:` parameter to limit output to a specific time unit granularity
+- `max_units:` parameter to show multiple time components (e.g., "1 hour 2 minutes ago")
+- `TimeAgo.duration_between(time1, time2)` method returning structured component hash
+
 ## [0.1.6] - 2026-03-31
 
 ### Added
