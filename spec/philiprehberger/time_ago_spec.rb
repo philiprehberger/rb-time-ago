@@ -5,6 +5,8 @@ require 'spec_helper'
 RSpec.describe Philiprehberger::TimeAgo do
   let(:now) { Time.new(2026, 3, 21, 12, 0, 0) }
 
+  after { described_class.reset_config! }
+
   it 'has a version number' do
     expect(Philiprehberger::TimeAgo::VERSION).not_to be_nil
   end
@@ -198,6 +200,145 @@ RSpec.describe Philiprehberger::TimeAgo do
     it 'shows future with max_units' do
       result = described_class.format(now + (86_400 + 3600), relative_to: now, max_units: 2)
       expect(result).to eq('in 1 day 1 hour')
+    end
+  end
+
+  describe '.configure' do
+    it 'sets the just_now threshold' do
+      described_class.configure(just_now: 10)
+      expect(described_class.config[:just_now]).to eq(10)
+    end
+
+    it 'affects format output for just_now' do
+      described_class.configure(just_now: 10)
+      expect(described_class.format(now - 15, relative_to: now)).to eq('15 seconds ago')
+    end
+
+    it 'still returns just now within custom threshold' do
+      described_class.configure(just_now: 10)
+      expect(described_class.format(now - 5, relative_to: now)).to eq('just now')
+    end
+
+    it 'raises on unknown config option' do
+      expect { described_class.configure(unknown_option: 42) }.to raise_error(described_class::Error)
+    end
+
+    it 'returns current config' do
+      result = described_class.configure(just_now: 15)
+      expect(result).to eq({ just_now: 15 })
+    end
+  end
+
+  describe '.reset_config!' do
+    it 'restores defaults' do
+      described_class.configure(just_now: 5)
+      described_class.reset_config!
+      expect(described_class.config[:just_now]).to eq(30)
+    end
+  end
+
+  describe '.format with compound' do
+    it 'joins two units with "and" for past' do
+      result = described_class.format(now - (3600 + 1800), relative_to: now, compound: true)
+      expect(result).to eq('1 hour and 30 minutes ago')
+    end
+
+    it 'joins two units with "and" for future' do
+      result = described_class.format(now + (3600 + 1800), relative_to: now, compound: true)
+      expect(result).to eq('in 1 hour and 30 minutes')
+    end
+
+    it 'shows single unit when no remainder' do
+      result = described_class.format(now - 3600, relative_to: now, compound: true)
+      expect(result).to eq('1 hour ago')
+    end
+
+    it 'works with days and hours' do
+      result = described_class.format(now - (86_400 + 7200), relative_to: now, compound: true)
+      expect(result).to eq('1 day and 2 hours ago')
+    end
+  end
+
+  describe '.format with approximate' do
+    it 'prefixes past with "about"' do
+      result = described_class.format(now - 7200, relative_to: now, approximate: true)
+      expect(result).to eq('about 2 hours ago')
+    end
+
+    it 'prefixes future with "about" after "in"' do
+      result = described_class.format(now + 300, relative_to: now, approximate: true)
+      expect(result).to eq('in about 5 minutes')
+    end
+
+    it 'does not prefix "just now"' do
+      result = described_class.format(now - 5, relative_to: now, approximate: true)
+      expect(result).to eq('just now')
+    end
+
+    it 'works with compound mode' do
+      result = described_class.format(now - (3600 + 1800), relative_to: now, compound: true, approximate: true)
+      expect(result).to eq('about 1 hour and 30 minutes ago')
+    end
+  end
+
+  describe '.in_words' do
+    it 'formats seconds' do
+      expect(described_class.in_words(45)).to eq('45 seconds')
+    end
+
+    it 'formats minutes' do
+      expect(described_class.in_words(300)).to eq('5 minutes')
+    end
+
+    it 'formats hours with remainder' do
+      expect(described_class.in_words(5400)).to eq('1 hour and 30 minutes')
+    end
+
+    it 'formats singular second' do
+      expect(described_class.in_words(1)).to eq('1 second')
+    end
+
+    it 'formats exact hours' do
+      expect(described_class.in_words(7200)).to eq('2 hours')
+    end
+
+    it 'formats days and hours' do
+      expect(described_class.in_words(90_000)).to eq('1 day and 1 hour')
+    end
+
+    it 'raises for non-numeric input' do
+      expect { described_class.in_words('five') }.to raise_error(described_class::Error)
+    end
+  end
+
+  describe '.auto' do
+    it 'returns relative time within threshold' do
+      result = described_class.auto(now - 3600, relative_to: now)
+      expect(result).to eq('1 hour ago')
+    end
+
+    it 'returns absolute date beyond threshold' do
+      result = described_class.auto(now - (2 * 86_400), threshold: 86_400, relative_to: now)
+      expect(result).to eq('Mar 19, 2026')
+    end
+
+    it 'uses custom format for absolute date' do
+      result = described_class.auto(now - (2 * 86_400), threshold: 86_400, format: '%Y-%m-%d', relative_to: now)
+      expect(result).to eq('2026-03-19')
+    end
+
+    it 'returns relative for exactly at threshold boundary' do
+      result = described_class.auto(now - 86_399, threshold: 86_400, relative_to: now)
+      expect(result).to eq('23 hours ago')
+    end
+
+    it 'returns absolute at threshold' do
+      result = described_class.auto(now - 86_400, threshold: 86_400, relative_to: now)
+      expect(result).to eq('Mar 20, 2026')
+    end
+
+    it 'raises for non-Time input' do
+      expect { described_class.auto('not a time') }.to raise_error(described_class::Error)
     end
   end
 
