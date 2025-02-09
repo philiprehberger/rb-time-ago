@@ -281,6 +281,44 @@ RSpec.describe Philiprehberger::TimeAgo do
     end
   end
 
+  describe '.until' do
+    it 'returns "in N minutes" for a future time' do
+      expect(described_class.until(now + 180, relative_to: now)).to eq('in 3 minutes')
+    end
+
+    it 'returns "in N hours" for a future time' do
+      expect(described_class.until(now + 7200, relative_to: now)).to eq('in 2 hours')
+    end
+
+    it 'returns "in N seconds" for small future offsets' do
+      expect(described_class.until(now + 45, relative_to: now)).to eq('in 45 seconds')
+    end
+
+    it 'returns "tomorrow" for 1 day in the future' do
+      expect(described_class.until(now + 86_400, relative_to: now)).to eq('tomorrow')
+    end
+
+    it 'returns "in 1 hour" for singular' do
+      expect(described_class.until(now + 3600, relative_to: now)).to eq('in 1 hour')
+    end
+
+    it 'returns "just now" for less than 30 seconds' do
+      expect(described_class.until(now + 10, relative_to: now)).to eq('just now')
+    end
+
+    it 'raises an error for past times' do
+      expect { described_class.until(now - 60, relative_to: now) }.to raise_error(described_class::Error, 'Expected a future time')
+    end
+
+    it 'raises an error for equal times' do
+      expect { described_class.until(now, relative_to: now) }.to raise_error(described_class::Error, 'Expected a future time')
+    end
+
+    it 'raises an error for non-Time input' do
+      expect { described_class.until('not a time') }.to raise_error(described_class::Error)
+    end
+  end
+
   describe '.in_words' do
     it 'formats seconds' do
       expect(described_class.in_words(45)).to eq('45 seconds')
