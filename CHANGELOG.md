@@ -1,0 +1,18 @@
+# Changelog
+
+All notable changes to this gem will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.1.0] - 2026-03-21
+
+### Added
+- Initial release
+- Relative time formatting for past timestamps ("3 minutes ago", "yesterday")
+- Future time formatting ("in 2 hours", "tomorrow")
+- Short format style ("3m ago", "2h ago")
+- Custom reference time via `relative_to` option
+- Automatic fallback to absolute date format via `max_days` option
