@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Relative time formatting for past and future timestamps'
   spec.description   = 'Format timestamps as human-readable relative strings like "3 minutes ago" or ' \
-                        '"in 2 hours". Supports short format, custom reference times, and automatic ' \
-                        'fallback to absolute dates beyond a configurable threshold.'
+                       '"in 2 hours". Supports short format, custom reference times, and automatic ' \
+                       'fallback to absolute dates beyond a configurable threshold.'
   spec.homepage      = 'https://github.com/philiprehberger/rb-time-ago'
   spec.license       = 'MIT'
 
