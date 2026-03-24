@@ -15,7 +15,7 @@ Relative time formatting for past and future timestamps
 Add to your Gemfile:
 
 ```ruby
-gem 'philiprehberger-time_ago'
+gem "philiprehberger-time_ago"
 ```
 
 Or install directly:
