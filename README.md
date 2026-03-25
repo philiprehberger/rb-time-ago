@@ -27,7 +27,7 @@ gem install philiprehberger-time_ago
 ## Usage
 
 ```ruby
-require 'philiprehberger/time_ago'
+require "philiprehberger/time_ago"
 
 Philiprehberger::TimeAgo.format(Time.now - 180)   # => "3 minutes ago"
 Philiprehberger::TimeAgo.format(Time.now - 7200)  # => "2 hours ago"
@@ -82,8 +82,8 @@ Philiprehberger::TimeAgo.format(old_time, max_days: 30)  # => "Jan 20, 2026"
 
 ```bash
 bundle install
-bundle exec rspec      # Run tests
-bundle exec rubocop    # Check code style
+bundle exec rspec
+bundle exec rubocop
 ```
 
 ## License
