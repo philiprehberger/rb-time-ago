@@ -64,11 +64,40 @@ old_time = Time.now - (60 * 86_400)
 Philiprehberger::TimeAgo.format(old_time, max_days: 30)  # => "Jan 20, 2026"
 ```
 
+### Precision Control
+
+```ruby
+# Show only the largest unit at hour precision
+Philiprehberger::TimeAgo.format(Time.now - 5400, precision: :hour)
+# => "1 hour ago"
+```
+
+### Multiple Units
+
+```ruby
+Philiprehberger::TimeAgo.format(Time.now - 3720, max_units: 2)
+# => "1 hour 2 minutes ago"
+
+Philiprehberger::TimeAgo.format(Time.now - 3720, style: :short, max_units: 2)
+# => "1h 2m ago"
+```
+
+### Duration Between
+
+```ruby
+t1 = Time.new(2026, 3, 21, 10, 0, 0)
+t2 = Time.new(2026, 3, 22, 12, 30, 45)
+
+Philiprehberger::TimeAgo.duration_between(t1, t2)
+# => { days: 1, hours: 2, minutes: 30, seconds: 45 }
+```
+
 ## API
 
 | Method | Description |
 |--------|-------------|
-| `TimeAgo.format(time, style: :long, relative_to: Time.now, max_days: nil)` | Format a timestamp as a relative time string |
+| `TimeAgo.format(time, **opts)` | Format a timestamp as a relative time string |
+| `TimeAgo.duration_between(time1, time2)` | Return structured hash of time components between two times |
 
 **Options:**
 
@@ -77,6 +106,8 @@ Philiprehberger::TimeAgo.format(old_time, max_days: 30)  # => "Jan 20, 2026"
 | `style` | Symbol | `:long` | `:long` for full words, `:short` for abbreviated |
 | `relative_to` | Time | `Time.now` | Reference time for comparison |
 | `max_days` | Integer, nil | `nil` | Fallback to absolute date after this many days |
+| `precision` | Symbol, nil | `nil` | Smallest unit to show (`:hour`, `:minute`, etc.) |
+| `max_units` | Integer, nil | `nil` | Maximum number of time components to show |
 
 ## Development
 

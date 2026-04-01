@@ -161,4 +161,67 @@ RSpec.describe Philiprehberger::TimeAgo do
       end
     end
   end
+
+  describe '.format with precision' do
+    it 'limits output to hour precision' do
+      result = described_class.format(now - 5400, relative_to: now, precision: :hour)
+      expect(result).to eq('1 hour ago')
+    end
+
+    it 'rounds to nearest precision unit' do
+      result = described_class.format(now - 90, relative_to: now, precision: :minute)
+      expect(result).to eq('1 minute ago')
+    end
+
+    it 'limits to day precision' do
+      result = described_class.format(now - ((3 * 86_400) + 7200), relative_to: now, precision: :day)
+      expect(result).to eq('3 days ago')
+    end
+  end
+
+  describe '.format with max_units' do
+    it 'shows single unit by default' do
+      result = described_class.format(now - (3600 + 120), relative_to: now)
+      expect(result).to eq('1 hour ago')
+    end
+
+    it 'shows multiple units when max_units > 1' do
+      result = described_class.format(now - (3600 + 120), relative_to: now, max_units: 2)
+      expect(result).to eq('1 hour 2 minutes ago')
+    end
+
+    it 'works with short style' do
+      result = described_class.format(now - (3600 + 120), style: :short, relative_to: now, max_units: 2)
+      expect(result).to eq('1h 2m ago')
+    end
+
+    it 'shows future with max_units' do
+      result = described_class.format(now + (86_400 + 3600), relative_to: now, max_units: 2)
+      expect(result).to eq('in 1 day 1 hour')
+    end
+  end
+
+  describe '.duration_between' do
+    it 'returns component hash' do
+      t1 = Time.new(2026, 3, 21, 10, 0, 0)
+      t2 = Time.new(2026, 3, 22, 12, 30, 45)
+      result = described_class.duration_between(t1, t2)
+      expect(result).to eq({ days: 1, hours: 2, minutes: 30, seconds: 45 })
+    end
+
+    it 'handles zero duration' do
+      result = described_class.duration_between(now, now)
+      expect(result).to eq({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+    end
+
+    it 'is commutative' do
+      t1 = Time.new(2026, 3, 21, 10, 0, 0)
+      t2 = Time.new(2026, 3, 22, 12, 0, 0)
+      expect(described_class.duration_between(t1, t2)).to eq(described_class.duration_between(t2, t1))
+    end
+
+    it 'raises Error for non-Time input' do
+      expect { described_class.duration_between('not a time', now) }.to raise_error(described_class::Error)
+    end
+  end
 end
