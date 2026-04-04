@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-03
+
+### Added
+- `TimeAgo.configure(just_now: 30, ...)` for class-level threshold configuration
+- `TimeAgo.config` and `TimeAgo.reset_config!` for reading and resetting configuration
+- `compound: true` option on `TimeAgo.format` to show two units joined with "and" (e.g., "1 hour and 30 minutes ago")
+- `approximate: true` option on `TimeAgo.format` to prefix with "about" (e.g., "about 2 hours ago")
+- `TimeAgo.in_words(seconds)` to format raw seconds as duration words without directional suffix
+- `TimeAgo.auto(time, threshold:, format:)` to return relative time within threshold or formatted absolute date
+
 ## [0.2.0] - 2026-04-01
 
 ### Added

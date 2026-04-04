@@ -82,6 +82,58 @@ Philiprehberger::TimeAgo.format(Time.now - 3720, style: :short, max_units: 2)
 # => "1h 2m ago"
 ```
 
+### Compound Mode
+
+```ruby
+Philiprehberger::TimeAgo.format(Time.now - 5400, compound: true)
+# => "1 hour and 30 minutes ago"
+
+Philiprehberger::TimeAgo.format(Time.now + 5400, compound: true)
+# => "in 1 hour and 30 minutes"
+```
+
+### Approximate Mode
+
+```ruby
+Philiprehberger::TimeAgo.format(Time.now - 7200, approximate: true)
+# => "about 2 hours ago"
+
+Philiprehberger::TimeAgo.format(Time.now + 300, approximate: true)
+# => "in about 5 minutes"
+```
+
+### In Words
+
+```ruby
+Philiprehberger::TimeAgo.in_words(5400)   # => "1 hour and 30 minutes"
+Philiprehberger::TimeAgo.in_words(300)    # => "5 minutes"
+Philiprehberger::TimeAgo.in_words(45)     # => "45 seconds"
+```
+
+### Auto (Relative or Absolute)
+
+```ruby
+Philiprehberger::TimeAgo.auto(Time.now - 3600)
+# => "1 hour ago"
+
+Philiprehberger::TimeAgo.auto(Time.now - (5 * 86_400), threshold: 86_400)
+# => "Mar 16, 2026"
+
+Philiprehberger::TimeAgo.auto(Time.now - (5 * 86_400), threshold: 86_400, format: "%Y-%m-%d")
+# => "2026-03-16"
+```
+
+### Configuration
+
+```ruby
+Philiprehberger::TimeAgo.configure(just_now: 10)
+
+Philiprehberger::TimeAgo.format(Time.now - 15)  # => "15 seconds ago"
+Philiprehberger::TimeAgo.format(Time.now - 5)   # => "just now"
+
+Philiprehberger::TimeAgo.reset_config!  # restore defaults
+```
+
 ### Duration Between
 
 ```ruby
@@ -97,9 +149,14 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | Method | Description |
 |--------|-------------|
 | `TimeAgo.format(time, **opts)` | Format a timestamp as a relative time string |
+| `TimeAgo.in_words(seconds)` | Format raw seconds as duration words (e.g., "5 minutes") |
+| `TimeAgo.auto(time, **opts)` | Relative time if within threshold, otherwise absolute date |
+| `TimeAgo.configure(**opts)` | Set module-level configuration thresholds |
+| `TimeAgo.config` | Return the current configuration hash |
+| `TimeAgo.reset_config!` | Reset configuration to defaults |
 | `TimeAgo.duration_between(time1, time2)` | Return structured hash of time components between two times |
 
-**Options:**
+**Format Options:**
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
@@ -108,6 +165,22 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | `max_days` | Integer, nil | `nil` | Fallback to absolute date after this many days |
 | `precision` | Symbol, nil | `nil` | Smallest unit to show (`:hour`, `:minute`, etc.) |
 | `max_units` | Integer, nil | `nil` | Maximum number of time components to show |
+| `compound` | Boolean | `false` | Show two units joined with "and" |
+| `approximate` | Boolean | `false` | Prefix output with "about" |
+
+**Auto Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `threshold` | Integer | `86400` | Seconds threshold for relative display |
+| `format` | String | `'%b %d, %Y'` | strftime format for absolute fallback |
+| `relative_to` | Time | `Time.now` | Reference time for comparison |
+
+**Configure Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `just_now` | Integer | `30` | Seconds threshold for "just now" |
 
 ## Development
 
