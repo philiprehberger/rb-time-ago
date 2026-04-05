@@ -102,6 +102,14 @@ Philiprehberger::TimeAgo.format(Time.now + 300, approximate: true)
 # => "in about 5 minutes"
 ```
 
+### Until (Future Time)
+
+```ruby
+Philiprehberger::TimeAgo.until(Time.now + 180)   # => "in 3 minutes"
+Philiprehberger::TimeAgo.until(Time.now + 7200)  # => "in 2 hours"
+Philiprehberger::TimeAgo.until(Time.now + 86_400) # => "tomorrow"
+```
+
 ### In Words
 
 ```ruby
@@ -149,6 +157,7 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | Method | Description |
 |--------|-------------|
 | `TimeAgo.format(time, **opts)` | Format a timestamp as a relative time string |
+| `TimeAgo.until(time, **opts)` | Format a future time as a relative string (e.g., "in 3 minutes") |
 | `TimeAgo.in_words(seconds)` | Format raw seconds as duration words (e.g., "5 minutes") |
 | `TimeAgo.auto(time, **opts)` | Relative time if within threshold, otherwise absolute date |
 | `TimeAgo.configure(**opts)` | Set module-level configuration thresholds |

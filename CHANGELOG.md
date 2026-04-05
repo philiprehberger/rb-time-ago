@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-04
+
+### Added
+- `TimeAgo.until(time, relative_to:)` method for formatting future times as "in 3 minutes", "in 2 hours", etc. (inverse of `format` for past times)
+
 ## [0.3.0] - 2026-04-03
 
 ### Added

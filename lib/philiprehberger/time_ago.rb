@@ -103,6 +103,25 @@ module Philiprehberger
       approximate ? add_approximate(result) : result
     end
 
+    # Format a future time as a human-readable relative string (e.g., "in 3 minutes")
+    #
+    # This is the inverse of `format` for past times. While `format` with a past
+    # timestamp returns "3 minutes ago", `until` with a future timestamp returns
+    # "in 3 minutes".
+    #
+    # @param time [Time] the future timestamp to format
+    # @param relative_to [Time] reference time (default: Time.now)
+    # @return [String] relative future time string (e.g., "in 2 hours")
+    # @raise [Error] if time is not a Time object
+    # @raise [Error] if time is not in the future relative to relative_to
+    def self.until(time, relative_to: Time.now)
+      raise Error, 'Expected a Time object' unless time.is_a?(Time)
+      raise Error, 'Expected relative_to to be a Time object' unless relative_to.is_a?(Time)
+      raise Error, 'Expected a future time' unless time > relative_to
+
+      format(time, relative_to: relative_to)
+    end
+
     # Format a raw number of seconds as duration words without "ago"/"from now"
     #
     # @param seconds [Numeric] number of seconds to format
