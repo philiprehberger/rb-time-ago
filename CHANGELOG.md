@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-12
+
+### Added
+- `TimeAgo.format_duration(seconds, **opts)` method for formatting raw seconds as human-readable duration strings with full option support (style, precision, max_units, compound, approximate)
+
+### Fixed
+- Bug report template now requires Ruby version and gem version fields
+- Feature request template now includes placeholder code example
+
 ## [0.4.0] - 2026-04-04
 
 ### Added

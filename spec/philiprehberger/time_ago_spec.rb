@@ -380,6 +380,76 @@ RSpec.describe Philiprehberger::TimeAgo do
     end
   end
 
+  describe '.format_duration' do
+    it 'formats seconds in long style with compound by default' do
+      expect(described_class.format_duration(5400)).to eq('1 hour and 30 minutes')
+    end
+
+    it 'formats in short style' do
+      expect(described_class.format_duration(5400, style: :short)).to eq('1h 30m')
+    end
+
+    it 'limits to max_units: 1' do
+      expect(described_class.format_duration(5400, max_units: 1)).to eq('1 hour')
+    end
+
+    it 'formats 3 units with Oxford comma' do
+      expect(described_class.format_duration(90_061, max_units: 3)).to eq('1 day, 1 hour, and 1 minute')
+    end
+
+    it 'formats without compound' do
+      expect(described_class.format_duration(5400, compound: false)).to eq('1 hour 30 minutes')
+    end
+
+    it 'formats with approximate' do
+      expect(described_class.format_duration(5400, approximate: true)).to eq('about 1 hour and 30 minutes')
+    end
+
+    it 'formats with precision' do
+      expect(described_class.format_duration(5400, precision: :hour)).to eq('1 hour')
+    end
+
+    it 'formats small values as seconds' do
+      expect(described_class.format_duration(15)).to eq('15 seconds')
+    end
+
+    it 'formats singular second' do
+      expect(described_class.format_duration(1)).to eq('1 second')
+    end
+
+    it 'formats zero seconds' do
+      expect(described_class.format_duration(0)).to eq('0 seconds')
+    end
+
+    it 'formats small values in short style' do
+      expect(described_class.format_duration(15, style: :short)).to eq('15s')
+    end
+
+    it 'formats approximate small values' do
+      expect(described_class.format_duration(15, approximate: true)).to eq('about 15 seconds')
+    end
+
+    it 'handles exact unit values' do
+      expect(described_class.format_duration(3600)).to eq('1 hour')
+    end
+
+    it 'handles days and hours in short style' do
+      expect(described_class.format_duration(90_000, style: :short)).to eq('1d 1h')
+    end
+
+    it 'handles negative values using absolute' do
+      expect(described_class.format_duration(-5400)).to eq('1 hour and 30 minutes')
+    end
+
+    it 'raises for non-numeric input' do
+      expect { described_class.format_duration('five') }.to raise_error(described_class::Error)
+    end
+
+    it 'raises for invalid style' do
+      expect { described_class.format_duration(100, style: :invalid) }.to raise_error(described_class::Error)
+    end
+  end
+
   describe '.duration_between' do
     it 'returns component hash' do
       t1 = Time.new(2026, 3, 21, 10, 0, 0)

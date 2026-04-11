@@ -271,6 +271,62 @@ module Philiprehberger
       parts
     end
 
-    private_class_method :format_long, :format_short, :resolve_unit, :decompose, :add_approximate
+    # Format a raw number of seconds as a human-readable duration string
+    #
+    # Unlike `format`, this method produces a directionless duration (no "ago" / "in").
+    # Unlike `in_words`, it supports all formatting options (style, precision, etc.).
+    #
+    # @param seconds [Numeric] number of seconds to format
+    # @param style [Symbol] :long (default) or :short
+    # @param precision [Symbol, nil] smallest unit to show (:year, :month, :week, :day, :hour, :minute, :second)
+    # @param max_units [Integer] maximum number of time components to show (default 2)
+    # @param compound [Boolean] join units with "and" (default true)
+    # @param approximate [Boolean] prefix with "about" (default false)
+    # @return [String] duration string (e.g., "1 hour and 30 minutes")
+    # @raise [Error] if seconds is not Numeric
+    def self.format_duration(seconds, style: :long, precision: nil, max_units: 2, compound: true, approximate: false)
+      raise Error, 'Expected a Numeric value' unless seconds.is_a?(Numeric)
+
+      absolute = seconds.abs
+
+      if absolute < @config[:just_now]
+        count = absolute.floor
+        result = case style
+                 when :long  then count == 1 ? '1 second' : "#{count} seconds"
+                 when :short then "#{count}s"
+                 else raise Error, "Unknown style: #{style}"
+                 end
+        return approximate ? "about #{result}" : result
+      end
+
+      parts = decompose(absolute, precision: precision, max_units: max_units)
+
+      result = case style
+               when :long  then format_duration_long(parts, compound: compound)
+               when :short then parts.map { |unit, count| "#{count}#{SHORT_LABELS[unit]}" }.join(' ')
+               else raise Error, "Unknown style: #{style}"
+               end
+
+      approximate ? "about #{result}" : result
+    end
+
+    # @api private
+    def self.format_duration_long(parts, compound:)
+      labels = parts.map { |unit, count| "#{count} #{count == 1 ? unit : "#{unit}s"}" }
+
+      return labels[0] if labels.length == 1
+
+      if compound
+        if labels.length == 2
+          "#{labels[0]} and #{labels[1]}"
+        else
+          "#{labels[0..-2].join(', ')}, and #{labels[-1]}"
+        end
+      else
+        labels.join(' ')
+      end
+    end
+
+    private_class_method :format_long, :format_short, :resolve_unit, :decompose, :add_approximate, :format_duration_long
   end
 end

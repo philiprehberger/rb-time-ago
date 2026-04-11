@@ -142,6 +142,22 @@ Philiprehberger::TimeAgo.format(Time.now - 5)   # => "just now"
 Philiprehberger::TimeAgo.reset_config!  # restore defaults
 ```
 
+### Format Duration
+
+```ruby
+Philiprehberger::TimeAgo.format_duration(5400)
+# => "1 hour and 30 minutes"
+
+Philiprehberger::TimeAgo.format_duration(5400, style: :short)
+# => "1h 30m"
+
+Philiprehberger::TimeAgo.format_duration(90_061, max_units: 3)
+# => "1 day, 1 hour, and 1 minute"
+
+Philiprehberger::TimeAgo.format_duration(5400, approximate: true)
+# => "about 1 hour and 30 minutes"
+```
+
 ### Duration Between
 
 ```ruby
@@ -163,6 +179,7 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | `TimeAgo.configure(**opts)` | Set module-level configuration thresholds |
 | `TimeAgo.config` | Return the current configuration hash |
 | `TimeAgo.reset_config!` | Reset configuration to defaults |
+| `TimeAgo.format_duration(seconds, **opts)` | Format raw seconds as a human-readable duration string |
 | `TimeAgo.duration_between(time1, time2)` | Return structured hash of time components between two times |
 
 **Format Options:**
@@ -176,6 +193,16 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | `max_units` | Integer, nil | `nil` | Maximum number of time components to show |
 | `compound` | Boolean | `false` | Show two units joined with "and" |
 | `approximate` | Boolean | `false` | Prefix output with "about" |
+
+**Format Duration Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `style` | Symbol | `:long` | `:long` for full words, `:short` for abbreviated |
+| `precision` | Symbol, nil | `nil` | Smallest unit to show (`:hour`, `:minute`, etc.) |
+| `max_units` | Integer | `2` | Maximum number of time components to show |
+| `compound` | Boolean | `true` | Join units with "and" |
+| `approximate` | Boolean | `false` | Prefix with "about" |
 
 **Auto Options:**
 
