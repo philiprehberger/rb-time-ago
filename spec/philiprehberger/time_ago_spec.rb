@@ -450,6 +450,38 @@ RSpec.describe Philiprehberger::TimeAgo do
     end
   end
 
+  describe '.future? and .past?' do
+    let(:reference) { Time.now }
+
+    it 'returns true for a future time with .future?' do
+      expect(described_class.future?(reference + 60, relative_to: reference)).to be(true)
+    end
+
+    it 'returns false for a future time with .past?' do
+      expect(described_class.past?(reference + 60, relative_to: reference)).to be(false)
+    end
+
+    it 'returns true for a past time with .past?' do
+      expect(described_class.past?(reference - 60, relative_to: reference)).to be(true)
+    end
+
+    it 'returns false for a past time with .future?' do
+      expect(described_class.future?(reference - 60, relative_to: reference)).to be(false)
+    end
+
+    it 'returns false for an equal time with .future?' do
+      expect(described_class.future?(reference, relative_to: reference)).to be(false)
+    end
+
+    it 'returns false for an equal time with .past?' do
+      expect(described_class.past?(reference, relative_to: reference)).to be(false)
+    end
+
+    it 'accepts Integer epoch input for .future?' do
+      expect(described_class.future?((reference + 60).to_i, relative_to: reference)).to be(true)
+    end
+  end
+
   describe '.duration_between' do
     it 'returns component hash' do
       t1 = Time.new(2026, 3, 21, 10, 0, 0)

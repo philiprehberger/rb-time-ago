@@ -158,6 +158,13 @@ Philiprehberger::TimeAgo.format_duration(5400, approximate: true)
 # => "about 1 hour and 30 minutes"
 ```
 
+### Past / Future Predicates
+
+```ruby
+Philiprehberger::TimeAgo.future?(deadline) # => true
+Philiprehberger::TimeAgo.past?(deadline)   # => false
+```
+
 ### Duration Between
 
 ```ruby
@@ -181,6 +188,8 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | `TimeAgo.reset_config!` | Reset configuration to defaults |
 | `TimeAgo.format_duration(seconds, **opts)` | Format raw seconds as a human-readable duration string |
 | `TimeAgo.duration_between(time1, time2)` | Return structured hash of time components between two times |
+| `.future?(time, relative_to: Time.now)` | True when `time` is after `relative_to` |
+| `.past?(time, relative_to: Time.now)` | True when `time` is before `relative_to` |
 
 **Format Options:**
 

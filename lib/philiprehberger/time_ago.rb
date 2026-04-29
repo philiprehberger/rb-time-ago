@@ -166,6 +166,24 @@ module Philiprehberger
       end
     end
 
+    # True when `time` is strictly after `relative_to`.
+    #
+    # @param time [Time, DateTime, Integer] timestamp (Integer is epoch seconds)
+    # @param relative_to [Time] reference time, defaults to now
+    # @return [Boolean]
+    def self.future?(time, relative_to: Time.now)
+      coerce_time(time) > relative_to
+    end
+
+    # True when `time` is strictly before `relative_to`.
+    #
+    # @param time [Time, DateTime, Integer] timestamp (Integer is epoch seconds)
+    # @param relative_to [Time] reference time, defaults to now
+    # @return [Boolean]
+    def self.past?(time, relative_to: Time.now)
+      coerce_time(time) < relative_to
+    end
+
     # Return a structured hash of time components between two times
     #
     # @param time1 [Time] first timestamp
@@ -327,6 +345,19 @@ module Philiprehberger
       end
     end
 
-    private_class_method :format_long, :format_short, :resolve_unit, :decompose, :add_approximate, :format_duration_long
+    # @api private
+    def self.coerce_time(time)
+      case time
+      when Time then time
+      when Integer then Time.at(time)
+      else
+        return time.to_time if time.respond_to?(:to_time)
+
+        raise Error, 'Expected a Time, DateTime, or Integer'
+      end
+    end
+
+    private_class_method :format_long, :format_short, :resolve_unit, :decompose, :add_approximate,
+                         :format_duration_long, :coerce_time
   end
 end
