@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-06-14
+
+### Added
+- `TimeAgo.between?(time, from:, to:)` predicate returning true when `time` falls within an inclusive `[from, to]` window. Accepts the same coerced inputs (Time, DateTime, Integer epoch) as `format`/`auto`. Raises `Error` when `from > to`.
+
 ## [0.6.0] - 2026-04-29
 
 ### Added

@@ -4,6 +4,8 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-time_ago.svg)](https://rubygems.org/gems/philiprehberger-time_ago)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-time-ago)](https://github.com/philiprehberger/rb-time-ago/commits/main)
 
+![philiprehberger-time_ago](https://raw.githubusercontent.com/philiprehberger/rb-time-ago/main/package-card.webp)
+
 Relative time formatting for past and future timestamps
 
 ## Requirements
@@ -175,6 +177,15 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 # => { days: 1, hours: 2, minutes: 30, seconds: 45 }
 ```
 
+### Time Windows
+
+```ruby
+require "philiprehberger/time_ago"
+
+TimeAgo.between?(event_time, from: Time.now - 3600, to: Time.now)
+# => true if event_time fell within the last hour
+```
+
 ## API
 
 | Method | Description |
@@ -190,6 +201,7 @@ Philiprehberger::TimeAgo.duration_between(t1, t2)
 | `TimeAgo.duration_between(time1, time2)` | Return structured hash of time components between two times |
 | `.future?(time, relative_to: Time.now)` | True when `time` is after `relative_to` |
 | `.past?(time, relative_to: Time.now)` | True when `time` is before `relative_to` |
+| `.between?(time, from:, to:)` | True if time falls within the inclusive `[from, to]` window |
 
 **Format Options:**
 

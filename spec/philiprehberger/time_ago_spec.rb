@@ -482,6 +482,40 @@ RSpec.describe Philiprehberger::TimeAgo do
     end
   end
 
+  describe '.between?' do
+    let(:now) { Time.new(2026, 6, 14, 12, 0, 0) }
+    let(:hour_ago) { now - 3600 }
+    let(:hour_ahead) { now + 3600 }
+
+    it 'returns true when time is inside the window' do
+      expect(described_class.between?(now, from: hour_ago, to: hour_ahead)).to be(true)
+    end
+
+    it 'is inclusive on the lower boundary' do
+      expect(described_class.between?(hour_ago, from: hour_ago, to: hour_ahead)).to be(true)
+    end
+
+    it 'is inclusive on the upper boundary' do
+      expect(described_class.between?(hour_ahead, from: hour_ago, to: hour_ahead)).to be(true)
+    end
+
+    it 'returns false when time is before the window' do
+      expect(described_class.between?(hour_ago - 1, from: hour_ago, to: hour_ahead)).to be(false)
+    end
+
+    it 'returns false when time is after the window' do
+      expect(described_class.between?(hour_ahead + 1, from: hour_ago, to: hour_ahead)).to be(false)
+    end
+
+    it 'accepts Integer epoch seconds' do
+      expect(described_class.between?(now.to_i, from: hour_ago.to_i, to: hour_ahead.to_i)).to be(true)
+    end
+
+    it 'raises when from is later than to' do
+      expect { described_class.between?(now, from: hour_ahead, to: hour_ago) }.to raise_error(described_class::Error)
+    end
+  end
+
   describe '.duration_between' do
     it 'returns component hash' do
       t1 = Time.new(2026, 3, 21, 10, 0, 0)

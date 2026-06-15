@@ -184,6 +184,26 @@ module Philiprehberger
       coerce_time(time) < relative_to
     end
 
+    # True when `time` is within the inclusive window `[from, to]`.
+    #
+    # The boundary values are accepted using the same coercion as `format` and
+    # `auto` (Time, DateTime, Integer epoch seconds, or any object responding
+    # to `#to_time`).
+    #
+    # @param time [Time, DateTime, Integer] timestamp to test
+    # @param from [Time, DateTime, Integer] window start (inclusive)
+    # @param to [Time, DateTime, Integer] window end (inclusive)
+    # @return [Boolean]
+    # @raise [Error] if `from` is later than `to`
+    def self.between?(time, from:, to:)
+      t = coerce_time(time)
+      lower = coerce_time(from)
+      upper = coerce_time(to)
+      raise Error, 'from must be <= to' if lower > upper
+
+      t.between?(lower, upper)
+    end
+
     # Return a structured hash of time components between two times
     #
     # @param time1 [Time] first timestamp
